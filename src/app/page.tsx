@@ -1,113 +1,69 @@
-import Image from 'next/image'
+type Props = {
+  searchParams: Promise<{ url?: string | string[] }>;
+};
 
-export default function Home() {
+export default async function Home({ searchParams }: Props) {
+  const { url: rawUrl } = await searchParams;
+  const url = (Array.isArray(rawUrl) ? rawUrl[0] : rawUrl)?.trim() ?? "";
+  const imageSrc = url ? `/api/instagram?url=${encodeURIComponent(url)}` : "";
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-4 py-12">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-3xl font-black text-green-700 dark:text-green-400">
+          麻麻呼呼 IG 分享圖產生器
+        </h1>
+        <p className="text-stone-600 dark:text-stone-400">
+          貼上文章網址，自動讀取 Open Graph 標題、描述與封面，產生 1024×1024 的
+          Instagram 分享圖。
         </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+      </header>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <form method="get" className="flex flex-col gap-3 sm:flex-row">
+        <label htmlFor="url" className="sr-only">
+          文章網址
+        </label>
+        <input
+          id="url"
+          name="url"
+          type="url"
+          required
+          defaultValue={url}
+          placeholder="https://mamayahuhu.com/..."
+          className="flex-1 rounded-lg border border-stone-300 bg-white px-4 py-2 text-stone-900 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
         />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="submit"
+          className="rounded-lg bg-green-600 px-6 py-2 font-bold text-white transition-colors hover:bg-green-700"
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          產生圖片
+        </button>
+      </form>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+      {imageSrc && (
+        <section className="flex flex-col items-center gap-4">
+          {/* Dynamic API image; next/image optimization adds nothing here. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageSrc}
+            alt={`${url} 的 Instagram 分享圖`}
+            width={1024}
+            height={1024}
+            className="h-auto w-full max-w-lg rounded-lg border border-stone-200 shadow dark:border-stone-800"
+          />
+          <a
+            href={imageSrc}
+            download="mamayahuhu-instagram.png"
+            className="text-green-700 underline hover:text-green-800 dark:text-green-400"
+          >
+            下載圖片
+          </a>
+        </section>
+      )}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <footer className="mt-auto text-sm text-stone-500">
+        API：<code>/api/instagram?url=&lt;文章網址&gt;</code>
+      </footer>
     </main>
-  )
+  );
 }
