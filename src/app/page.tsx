@@ -30,7 +30,7 @@ export default async function Home({ searchParams }: Props) {
           required
           defaultValue={url}
           placeholder="https://mamayahuhu.com/..."
-          className="flex-1 rounded-lg border border-stone-300 bg-white px-4 py-2 text-stone-900 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+          className="flex-1 rounded-lg border border-stone-300 bg-white px-4 py-2 text-stone-900 outline-hidden focus:border-green-500 focus:ring-2 focus:ring-green-500/30 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
         />
         <button
           type="submit"
@@ -49,7 +49,7 @@ export default async function Home({ searchParams }: Props) {
             alt={`${url} 的 Instagram 分享圖`}
             width={1024}
             height={1024}
-            className="h-auto w-full max-w-lg rounded-lg border border-stone-200 shadow dark:border-stone-800"
+            className="h-auto w-full max-w-lg rounded-lg border border-stone-200 shadow-sm dark:border-stone-800"
           />
           <a
             href={imageSrc}

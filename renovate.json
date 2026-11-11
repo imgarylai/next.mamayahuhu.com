@@ -1,6 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "group:allNonMajor",
+    ":timezone(Asia/Taipei)",
+    "schedule:weekly"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "eslint-config-next's bundled plugins (import, jsx-a11y, react) only support ESLint <=9",
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10"
+    }
   ]
 }
