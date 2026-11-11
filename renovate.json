@@ -7,9 +7,15 @@
     "schedule:weekly"
   ],
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "automerge": true
   },
   "packageRules": [
+    {
+      "description": "Automerge minor/patch updates once all status checks (Vercel build) pass; majors still need manual review",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
     {
       "description": "eslint-config-next's bundled plugins (import, jsx-a11y, react) only support ESLint <=9",
       "matchPackageNames": ["eslint"],
